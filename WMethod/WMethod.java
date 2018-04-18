@@ -363,13 +363,22 @@ public class WMethod {
 		pTableManager w = new pTableManager(FSM, numberOfStates, realInput);
 		Vector<String> tests = generateTests(transitionCover, w); // Generate tests.
 		Utilities.printAllTestCases(tests); // Print tests.
-		for (String test : tests) {
+		for (int i = 0; i < tests.size(); i++) {
 			String testWithSpaces = "";
-			char[] letters = test.toCharArray();
+			String currentTest = tests.get(i);
+			char[] letters = currentTest.toCharArray();
 			for (char letter : letters) {
 				testWithSpaces = testWithSpaces + " " + letter;
 			}
-			Utilities.runFSM(FSM, 1, testWithSpaces, " ");
+			String outputPattern = Utilities.runFSM(FSM, 1, testWithSpaces, " ");
+			String methodCall = "jb.bondRegex(\"" + currentTest +"\")";
+			System.out.println("@Test");
+			System.out.println("public void testCase" + i + "(){");
+			if (outputPattern.contains("yes"))
+				System.out.println("assertTrue(" + methodCall + ");");
+			else
+				System.out.println("assertFalse(" + methodCall + ");");
+			System.out.println("}");
 		} // End of main()
 	}
 }// End of class WMethod
